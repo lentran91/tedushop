@@ -1,0 +1,24 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TeduShop.Model.Models
+{
+    [Table("ProductTags")]
+    public class ProductTag
+    {
+        [Key]
+        public int ProductID { set; get; }
+        
+        [Key]
+        [MaxLength(50)]
+        [Column(TypeName = "varchar")]
+        public string TagID { set; get; }
+
+
+        [ForeignKey("ProductID")]
+        public Product Product { set; get; }
+
+        [ForeignKey("TagID")]
+        public Tag Tag { set; get; }
+    }
+}
