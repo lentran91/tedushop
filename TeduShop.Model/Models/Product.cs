@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
@@ -28,7 +30,8 @@ namespace TeduShop.Model.Models
         [MaxLength(256)]
         public string Image { set; get; }
 
-        public XElement MoreImage { set; get; }
+        [Column (TypeName = "xml")]
+        public string MoreImage { set; get; }
 
         [Required]
         public decimal Price { set; get; }
@@ -45,5 +48,6 @@ namespace TeduShop.Model.Models
         [ForeignKey("CategoryID")]
         public virtual ProductCategory ProductCategory { set; get; }
 
+        public virtual IEnumerable<OrderDetail> OrderDetails { set; get; }
     }
 }
