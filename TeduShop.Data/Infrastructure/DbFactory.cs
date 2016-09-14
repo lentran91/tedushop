@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TeduShop.Data.Infrastructure
+﻿namespace TeduShop.Data.Infrastructure
 {
     public class DbFactory : Disposable, IDbFactory
     {

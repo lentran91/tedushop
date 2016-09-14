@@ -8,6 +8,17 @@ namespace TeduShop.Data.Migrations
         public override void Up()
         {
             CreateTable(
+                "dbo.Errors",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Message = c.String(),
+                        StackTrace = c.String(),
+                        CreatedDate = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID);
+            
+            CreateTable(
                 "dbo.Footers",
                 c => new
                     {
@@ -94,6 +105,7 @@ namespace TeduShop.Data.Migrations
                         UpdateDate = c.DateTime(),
                         UpdateBy = c.String(maxLength: 256),
                         MetaKeyword = c.String(maxLength: 256),
+                        MetaDescription = c.String(maxLength: 500),
                         Description = c.String(maxLength: 500),
                         Status = c.Boolean(nullable: false),
                     })
@@ -117,6 +129,7 @@ namespace TeduShop.Data.Migrations
                         UpdateDate = c.DateTime(),
                         UpdateBy = c.String(maxLength: 256),
                         MetaKeyword = c.String(maxLength: 256),
+                        MetaDescription = c.String(maxLength: 500),
                         Description = c.String(maxLength: 500),
                         Status = c.Boolean(nullable: false),
                     })
@@ -140,7 +153,6 @@ namespace TeduShop.Data.Migrations
                         ID = c.Int(nullable: false, identity: true),
                         Name = c.String(nullable: false, maxLength: 256),
                         Alias = c.String(nullable: false, maxLength: 256, unicode: false),
-                        Description = c.String(maxLength: 500),
                         ParentId = c.Int(),
                         DisplayOrder = c.Int(),
                         Image = c.String(maxLength: 256),
@@ -150,6 +162,8 @@ namespace TeduShop.Data.Migrations
                         UpdateDate = c.DateTime(),
                         UpdateBy = c.String(maxLength: 256),
                         MetaKeyword = c.String(maxLength: 256),
+                        MetaDescription = c.String(maxLength: 500),
+                        Description = c.String(maxLength: 500),
                         Status = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.ID);
@@ -172,11 +186,12 @@ namespace TeduShop.Data.Migrations
                         UpdateDate = c.DateTime(),
                         UpdateBy = c.String(maxLength: 256),
                         MetaKeyword = c.String(maxLength: 256),
+                        MetaDescription = c.String(maxLength: 500),
                         Description = c.String(maxLength: 500),
                         Status = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.ID)
-                .ForeignKey("dbo.ProductCategories", t => t.CategoryID, cascadeDelete: true)
+                .ForeignKey("dbo.PostCategories", t => t.CategoryID, cascadeDelete: true)
                 .Index(t => t.CategoryID);
             
             CreateTable(
@@ -274,7 +289,7 @@ namespace TeduShop.Data.Migrations
             DropForeignKey("dbo.ProductTags", "ProductID", "dbo.Products");
             DropForeignKey("dbo.PostTags", "TagID", "dbo.Tags");
             DropForeignKey("dbo.PostTags", "PostID", "dbo.Posts");
-            DropForeignKey("dbo.Posts", "CategoryID", "dbo.ProductCategories");
+            DropForeignKey("dbo.Posts", "CategoryID", "dbo.PostCategories");
             DropForeignKey("dbo.OrderDetails", "ProductID", "dbo.Products");
             DropForeignKey("dbo.Products", "CategoryID", "dbo.ProductCategories");
             DropForeignKey("dbo.OrderDetails", "OrderID", "dbo.Orders");
@@ -305,6 +320,7 @@ namespace TeduShop.Data.Migrations
             DropTable("dbo.Menus");
             DropTable("dbo.MenuGroups");
             DropTable("dbo.Footers");
+            DropTable("dbo.Errors");
         }
     }
 }
