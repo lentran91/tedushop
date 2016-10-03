@@ -1,26 +1,31 @@
 ﻿using System.Reflection;
 using System.Web.Http;
+
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
+using Microsoft.Owin.Security.DataProtection;
 using Owin;
 using TeduShop.Data;
 using TeduShop.Data.Infrastructure;
 using TeduShop.Data.Reponsitories;
 using TeduShop.Model;
+using System.Web;
+using Microsoft.AspNet.Identity;
+using TeduShop.Model.Models;
 
 [assembly: OwinStartup(typeof(TeduShop.Web.App_Start.Startup))]
 
 namespace TeduShop.Web.App_Start
 {
-    public class Startup
+    public partial class Startup
     {
         public void Configuration(IAppBuilder app)
         {
             ConfigAutofac(app);
-
+            ConfigureAuth(app);
         }
 
         private void ConfigAutofac(IAppBuilder app)
@@ -32,6 +37,13 @@ namespace TeduShop.Web.App_Start
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerRequest();
             builder.RegisterType<DbFactory>().As<IDbFactory>().InstancePerRequest();
             builder.RegisterType<TeduShopDbContext>().AsSelf().InstancePerRequest();
+
+            //Asp.net Identity
+            builder.RegisterType<ApplicationUserStore>().As<IUserStore<ApplicationUser>>().InstancePerRequest();
+            builder.RegisterType<ApplicationUserManager>().AsSelf().InstancePerRequest();
+            builder.RegisterType<ApplicationSignInManager>().AsSelf().InstancePerRequest();
+            builder.Register(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
+            builder.Register(c => app.GetDataProtectionProvider()).InstancePerRequest();
 
             //Repositories
             builder.RegisterAssemblyTypes(typeof (PostCategoryRepository).Assembly)
@@ -47,6 +59,5 @@ namespace TeduShop.Web.App_Start
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver((IContainer)container);
         }
-
     }
 }
